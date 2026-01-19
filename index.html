@@ -1,38 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Brie Codes Website</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
-  <script src="myscript.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DC FSBO Transaction Manager</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1 id="myH1">Hi I'm Bree. Welcome to my website</h1>
-    <nav>
-      <ul>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Work</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
+    <!-- Navigation -->
+    <nav id="mainNav" class="hidden">
+        <div class="nav-container">
+            <h1 class="nav-title">DC FSBO Transaction Manager</h1>
+            <div class="nav-links">
+                <a href="#" data-view="dashboard" class="nav-link active">Dashboard</a>
+                <a href="#" data-view="timeline" class="nav-link">Timeline</a>
+                <a href="#" data-view="documents" class="nav-link">Documents</a>
+                <a href="#" data-view="financial" class="nav-link">Financials</a>
+                <a href="#" id="newTransactionBtn" class="nav-link">New Transaction</a>
+            </div>
+        </div>
     </nav>
-  </header>
-  <main>
-    <h2>About Me</h2>
-    <p>From launching the first predictive analytics models for care at Epic Systems to now, I have been captivated by the ways to use cutting-edge technologies like AI/ML and automation to improve patient access to care. I am guided by the belief that every person should have affordable and accessible quality healthcare when needed.
-Here are the problems I'm working to solve in my career:
-Why is medical care in the U.S.A. some of the best in the world, but access to care is not?
-Why do over 80% of medical bills contain errors?
-Why has AI not been adopted widely in the healthcare industry?
-I love to connect with others working on these problems, or are interested in discussing how to improve these areas in the future. Please reach out!</p>
-    <h2>My Work</h2>
-    <p>This is a list of my work.</p>
-    <h2>Contact Me</h2>
-    <p>This is my contact information.</p>
-  </main>
-  <footer>
-    <p>Copyright &copy; 2023 Bree Codes</p>
-  </footer>
+
+    <!-- Welcome Screen -->
+    <div id="welcomeView" class="view active">
+        <div class="welcome-container">
+            <h1>DC FSBO Transaction Manager</h1>
+            <p class="subtitle">Manage your For Sale By Owner real estate transaction in Washington, D.C.</p>
+
+            <div class="role-selection">
+                <h2>Are you the buyer or seller?</h2>
+                <div class="role-buttons">
+                    <button class="role-btn" data-role="buyer">
+                        <span class="role-icon">🏡</span>
+                        <span class="role-text">I'm a Buyer</span>
+                    </button>
+                    <button class="role-btn" data-role="seller">
+                        <span class="role-icon">💰</span>
+                        <span class="role-text">I'm a Seller</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Setup Form -->
+    <div id="setupView" class="view">
+        <div class="form-container">
+            <h1>Transaction Details</h1>
+            <p class="subtitle">Tell us about your transaction</p>
+
+            <form id="transactionForm">
+                <div class="form-group">
+                    <label for="salePrice">Sale Price *</label>
+                    <div class="input-with-prefix">
+                        <span class="prefix">$</span>
+                        <input type="number" id="salePrice" name="salePrice" required min="0" step="1000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="settlementDate">Target Settlement Date *</label>
+                    <input type="date" id="settlementDate" name="settlementDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loanType">Loan Type *</label>
+                    <select id="loanType" name="loanType" required>
+                        <option value="">Select...</option>
+                        <option value="cash">Cash</option>
+                        <option value="conventional">Conventional</option>
+                        <option value="fha">FHA</option>
+                        <option value="va">VA</option>
+                    </select>
+                </div>
+
+                <div id="loanFields" class="hidden">
+                    <div class="form-group">
+                        <label for="downPaymentPercent">Down Payment %</label>
+                        <input type="number" id="downPaymentPercent" name="downPaymentPercent" min="0" max="100" step="0.5" value="20">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interestRate">Interest Rate %</label>
+                        <input type="number" id="interestRate" name="interestRate" min="0" max="20" step="0.125" value="7.0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="propertyYear">Property Built Year</label>
+                    <input type="number" id="propertyYear" name="propertyYear" min="1800" max="2026" placeholder="e.g., 1950">
+                    <small>Required for lead paint disclosure (pre-1978 properties)</small>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="hasHOA" name="hasHOA">
+                        <span>Property has HOA</span>
+                    </label>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="isFirstTimeBuyer" name="isFirstTimeBuyer">
+                        <span>First-time buyer (affects DC recordation tax)</span>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="backToRole">Back</button>
+                    <button type="submit" class="btn-primary">Create Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard View -->
+    <div id="dashboardView" class="view">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1>Transaction Dashboard</h1>
+                <div id="roleDisplay" class="role-badge"></div>
+            </div>
+
+            <!-- Progress Overview -->
+            <div class="progress-section">
+                <h2>Transaction Progress</h2>
+                <div class="progress-cards">
+                    <div class="progress-card">
+                        <h3>Days Until Settlement</h3>
+                        <div class="progress-value" id="daysRemaining">--</div>
+                    </div>
+                    <div class="progress-card">
+                        <h3>Milestones Complete</h3>
+                        <div class="progress-value" id="milestonesProgress">0/0</div>
+                    </div>
+                    <div class="progress-card">
+                        <h3>Documents Complete</h3>
+                        <div class="progress-value" id="documentsProgress">0/0</div>
+                    </div>
+                    <div class="progress-card">
+                        <h3>Status</h3>
+                        <div class="progress-value status" id="overallStatus">On Track</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Actions -->
+            <div class="next-actions-section">
+                <h2>What You Need to Do Next</h2>
+                <div id="nextActionsList" class="action-list">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="quick-links-section">
+                <h2>Quick Access</h2>
+                <div class="quick-links">
+                    <a href="#" data-view="timeline" class="quick-link-card">
+                        <span class="icon">📅</span>
+                        <span class="label">View Timeline</span>
+                    </a>
+                    <a href="#" data-view="documents" class="quick-link-card">
+                        <span class="icon">📄</span>
+                        <span class="label">Check Documents</span>
+                    </a>
+                    <a href="#" data-view="financial" class="quick-link-card">
+                        <span class="icon">💵</span>
+                        <span class="label">Review Financials</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline View -->
+    <div id="timelineView" class="view">
+        <div class="timeline-container">
+            <h1>Transaction Timeline</h1>
+            <div class="timeline-controls">
+                <button class="btn-secondary" id="printTimeline">Print Timeline</button>
+            </div>
+            <div id="timelineContent" class="timeline-content">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Documents View -->
+    <div id="documentsView" class="view">
+        <div class="documents-container">
+            <h1>Document Checklist</h1>
+            <div class="documents-controls">
+                <button class="btn-secondary" id="printDocuments">Print Checklist</button>
+            </div>
+            <div id="documentsContent" class="documents-content">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial View -->
+    <div id="financialView" class="view">
+        <div class="financial-container">
+            <h1>Financial Summary</h1>
+            <div id="financialContent" class="financial-content">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
